@@ -5,10 +5,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Keep Clone</title>
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="stylesheet" href="scrimba-style.css">
 </head>
 <body>
-    <main></main>
+    <header>
+        <img class="header-logo" src="https://www.gstatic.com/images/branding/product/1x/keep_48dp.png">
+        <h2 class="header-title">Keep</h2>
+    </header>
+    <main>
+        <div id="form-container">
+            <form id="form" autocomplete="off">
+                <input id="note-title" type="text" placeholder="Title">
+                <input id="note-text" type="text" placeholder="Take a note...">
+                <div id="form-buttons">
+                    <button id="submit-button" type="submit">Submit</button>
+                    <button id="form-close-button" type="button">Close</button>
+                </div>
+            </form>
+        </div>
+        <div id="notes"></div>
+        <div id="placeholder">
+            <!-- <img src="" alt="" id="placeholder-logo"> -->
+            <!-- <span class="material-icons">lightbulb</span> -->
+            <p id="placeholder-text">Note you add appear here</p>
+        </div>
+    </main>
+    <!-- <footer>Google Keep Project</footer> -->
     <script src="app.js"></script>
 </body>
 </html>
