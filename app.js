@@ -57,24 +57,26 @@ class App {
         this.$formButtons.style.display = "none";
     }
     
+    
     addNote(note) {
+        const getIdNumber = () => {
+            let idNumber = 1;
+            if (this.notes.length > 0) {
+                // Find the last item in the notes array and add 1
+                // to create next note's ID
+                idNumber = this.notes[this.notes.length - 1].id + 1;
+            } // If no note yet, set note's ID to 1
+            return idNumber;
+        }
         const newNote = {
             title: note.title,
             text: note.text,
-            color: 'white',
-            id: () => {
-                const idNumber = 1;
-                if (this.notes.length > 0) {
-                    // Find the last item in the notes array and add 1
-                    // to create next note's ID
-                    idNumber = this.notes[this.notes.length - 1].id + 1;
-                } else idNumber = 1; // If no note yet, set note's ID to 1
-                return idNumber;
-            }
-        }
+            color: "white",
+            id: getIdNumber()
+        };
         this.notes = [...this.notes, newNote];
         console.log(this.notes);
-    }
+    }    
 }
 
 new App();
