@@ -6,6 +6,8 @@ class App {
         this.$noteTitle = document.querySelector('#note-title');
         this.$noteText = document.querySelector("#note-text");
         this.$formButtons = document.querySelector('#form-buttons');
+        this.$placeholder = document.querySelector('#placeholder');
+        this.$notes = document.querySelector('#notes');
         
         this.addEventListeners();
     }
@@ -75,8 +77,34 @@ class App {
             id: getIdNumber()
         };
         this.notes = [...this.notes, newNote];
-        console.log(this.notes);
-    }    
+        this.displayNotes();
+        this.closeForm();
+    }
+    
+    displayNotes() {
+        // Create a variable that returns true/fase when checking array this.note
+        // if there's any note being submitted
+        const hasNotes = this.notes.length > 0;
+        if (hasNotes) {
+            // If there is a note submitted, remove the placeholder
+            this.$placeholder.style.display = 'none';
+        } else this.$placeholder.style.display = 'flex';
+        
+        // Taking all note objects that has been spreaded into this.notes (line 79)
+        this.$notes.innerHTML = this.notes.map((note) =>
+          `
+        <div class="note" style="background: ${note.color}">
+            <div class="${note.title && 'note-title'}">${note.title}</div>
+            <div class="note-text">${note.text}</div>
+            <div class="toolbar-container">
+                <div class="toolbar">
+                <img src="" class="toolbar-color">
+                <img src="" class="toolbar-delete">
+                </div>
+            </div>
+        </div>
+        `).join('');
+    }
 }
 
 new App();
