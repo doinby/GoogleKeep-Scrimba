@@ -1,6 +1,9 @@
 class App {
   constructor() {
     this.notes = [];
+    this.title = '';
+    this.text = '';
+    this.id = '';
 
     this.$form = document.querySelector("#form");
     this.$noteTitle = document.querySelector("#note-title");
@@ -9,6 +12,10 @@ class App {
     this.$formCloseButton = document.querySelector("#form-close-button");
     this.$placeholder = document.querySelector("#placeholder");
     this.$notes = document.querySelector("#notes");
+    this.$modal = document.querySelector('.modal');
+    this.$modalTitle = document.querySelector('.modal-title');
+    this.$modalText = document.querySelector(".modal-text");
+    this.$modalCloseButton = document.querySelector('.modal-close-button')
 
     this.addEventListeners();
   }
@@ -16,6 +23,8 @@ class App {
   addEventListeners() {
     document.body.addEventListener("click", (event) => {
       this.handleFormClick(event);
+      this.openModal(event);
+      this.selectNote(event);
     });
 
     this.$form.addEventListener("submit", (event) => {
@@ -40,6 +49,10 @@ class App {
         event.stopPropagation(); // Stop handleFormClick function from openning form
         this.closeForm();
     });
+
+    this.$modalCloseButton.addEventListener('click', event => {
+        this.closeModal();
+    })
   }
 
   handleFormClick(event) {
@@ -73,6 +86,18 @@ class App {
     this.$noteText.value = "";
   }
 
+  openModal(event) {
+    if(event.target.closest('.note')) {
+        this.$modal.classList.toggle('open-modal');
+        this.$modalTitle.value = this.title;
+        this.$modalText.value = this.text;
+    }
+  }
+
+  closeModal(event) {
+    
+  }
+
   addNote({title, text}) {
     const getIdNumber = () => {
       let idNumber = 1;
@@ -94,6 +119,17 @@ class App {
     this.closeForm();
   }
 
+  selectNote(event) {
+    const $selectedNote = event.target.closest('.note');
+    // Preventing app from running the rest of the code if note hasn't been selected
+    if(!$selectedNote) return;
+    // Array destructuring to get the first 2 childrens
+    const [$noteTitle, $noteText] = $selectedNote.children;
+    this.$modalTitle.value = $noteTitle.innerText;
+    this.$modalText.value = $noteText.innerText;
+    this.id = $selectedNote.dataset.id; // taken from line 131 in DOM data-id
+  }
+
   displayNotes() {
     // Create a variable that returns true/fase when checking array this.note
     // if there's any note being submitted
@@ -104,11 +140,8 @@ class App {
     } else this.$placeholder.style.display = "flex";
 
     // Taking all note objects that has been spreaded into this.notes (line 79)
-    this.$notes.innerHTML = this.notes
-      .map(
-        (note) =>
-          `
-        <div class="note" style="background: ${note.color}">
+    this.$notes.innerHTML = this.notes.map((note) => `
+        <div class="note" style="background: ${note.color}" data-id="${note.id}">
             <div class="${note.title && "note-title"}">${note.title}</div>
             <div class="note-text">${note.text}</div>
             <div class="toolbar-container">
@@ -117,10 +150,8 @@ class App {
                 <img src="" class="toolbar-delete">
                 </div>
             </div>
-        </div>
-        `
-      )
-      .join("");
+        </div>`
+    ).join("");
   }
 }
 
