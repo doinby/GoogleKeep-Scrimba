@@ -89,13 +89,25 @@ class App {
   openModal(event) {
     if(event.target.closest('.note')) {
         this.$modal.classList.toggle('open-modal');
-        this.$modalTitle.value = this.title;
-        this.$modalText.value = this.text;
     }
   }
 
   closeModal(event) {
+    const title = this.$modalTitle.value;
+    const text = this.$modalText.value;
+
+    // Update any change to global title and text value
+    this.title = title;
+    this.text = text;
+    for(let i in this.note) {
+        if(this.id) {
+            this.$noteTitle = this.title;
+            this.$noteText = this.text;
+        }
+    }
+
     
+    this.$modal.classList.toggle("open-modal");
   }
 
   addNote({title, text}) {
@@ -125,9 +137,13 @@ class App {
     if(!$selectedNote) return;
     // Array destructuring to get the first 2 childrens
     const [$noteTitle, $noteText] = $selectedNote.children;
-    this.$modalTitle.value = $noteTitle.innerText;
-    this.$modalText.value = $noteText.innerText;
+    this.title = $noteTitle.innerText;
+    this.text = $noteText.innerText;
     this.id = $selectedNote.dataset.id; // taken from line 131 in DOM data-id
+    
+    // Set modal title and text the same as selected note
+    this.$modalTitle.value = this.title;
+    this.$modalText.value = this.text;
   }
 
   displayNotes() {
