@@ -23,8 +23,9 @@ class App {
   addEventListeners() {
     document.body.addEventListener("click", (event) => {
       this.handleFormClick(event);
-      this.openModal(event);
       this.selectNote(event);
+      this.openModal(event);
+      this.deleteNote(event);
     });
 
     this.$form.addEventListener("submit", (event) => {
@@ -87,6 +88,9 @@ class App {
   }
 
   openModal(event) {
+    // Preventing modal from opening if delete button is pressed
+    if(event.target.matches('.toolbar-delete')) return;
+
     if(event.target.closest('.note')) {
         this.$modal.classList.toggle('open-modal');
     }
@@ -125,8 +129,8 @@ class App {
     this.notes = this.notes.map(note => {
       // Note that in order for ID comparision to return true, this.id needs to be converted
       // to number first
-      console.log('note.id is a', typeof note.id);
-      console.log("this.id is a", typeof this.id);
+      // console.log('note.id is a', typeof note.id);
+      // console.log("this.id is a", typeof this.id);
       if(note.id === Number(this.id)) {
         return {...note, title, text};
       } else return note;
@@ -147,7 +151,18 @@ class App {
     // Set modal title and text the same as selected note
     this.$modalTitle.value = this.title;
     this.$modalText.value = this.text;
-    console.log(this.title, this.text, this.id);
+    // console.log(this.title, this.text, this.id);
+  }
+
+  deleteNote(event) {
+    event.stopPropagation();
+    if(!event.target.matches('.toolbar-delete')) return;
+
+    const currentId = event.target.dataset.id;
+    console.log('event.target.dataset.id:', event.target.dataset.id)
+    // console.log('currentId:', currentId)
+    this.notes = this.notes.filter(note => note.id !== Number(currentId));
+    this.displayNotes();
   }
 
   displayNotes() {
