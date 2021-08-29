@@ -3,7 +3,7 @@ class App {
     this.notes = [];
     this.title = '';
     this.text = '';
-    this.id = '';
+    this.id = ''; // This is a string
 
     this.$form = document.querySelector("#form");
     this.$noteTitle = document.querySelector("#note-title");
@@ -93,20 +93,7 @@ class App {
   }
 
   closeModal(event) {
-    const title = this.$modalTitle.value;
-    const text = this.$modalText.value;
-
-    // Update any change to global title and text value
-    this.title = title;
-    this.text = text;
-    for(let i in this.note) {
-        if(this.id) {
-            this.$noteTitle = this.title;
-            this.$noteText = this.text;
-        }
-    }
-
-    
+    this.editNote();
     this.$modal.classList.toggle("open-modal");
   }
 
@@ -130,7 +117,23 @@ class App {
     this.displayNotes();
     this.closeForm();
   }
-
+  
+  editNote() {
+    const title = this.$modalTitle.value;
+    const text = this.$modalText.value;
+    
+    this.notes = this.notes.map(note => {
+      // Note that in order for ID comparision to return true, this.id needs to be converted
+      // to number first
+      console.log('note.id is a', typeof note.id);
+      console.log("this.id is a", typeof this.id);
+      if(note.id === Number(this.id)) {
+        return {...note, title, text};
+      } else return note;
+    });
+    this.displayNotes();
+  }
+  
   selectNote(event) {
     const $selectedNote = event.target.closest('.note');
     // Preventing app from running the rest of the code if note hasn't been selected
@@ -144,6 +147,7 @@ class App {
     // Set modal title and text the same as selected note
     this.$modalTitle.value = this.title;
     this.$modalText.value = this.text;
+    console.log(this.title, this.text, this.id);
   }
 
   displayNotes() {
@@ -156,7 +160,7 @@ class App {
     } else this.$placeholder.style.display = "flex";
 
     // Taking all note objects that has been spreaded into this.notes (line 79)
-    this.$notes.innerHTML = this.notes.map((note) => `
+    this.$notes.innerHTML = this.notes.map(note => `
         <div class="note" style="background: ${note.color}" data-id="${note.id}">
             <div class="${note.title && "note-title"}">${note.title}</div>
             <div class="note-text">${note.text}</div>
